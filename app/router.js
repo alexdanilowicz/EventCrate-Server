@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as AdminUserController from './controllers/adminUserController';
 import * as ClubUserController from './controllers/clubUserController';
+import * as EventController from './controllers/eventController';
 
 const router = Router();
 
@@ -22,5 +23,9 @@ router.route('/admin/signup')
   .post(AdminUserController.signUp)
   .get(AdminUserController.validateNewField);
 
+// events
+router.route('/events/')
+  .post(EventController.createEvent)
+  .get(EventController.getAllEvents);
 
 export default router;
