@@ -1,11 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import path from 'path';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-import exampleRoutes from './routes/exampleRoutes';
+import apiRouter from './router';
 
 // initialize
 dotenv.config();
@@ -24,24 +23,23 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-//hook up MongDB
+// hook up MongDB
 let uri;
 
-if ( !process.env.DB_USERNAME || !process.env.PASSWORD ){
+if (!process.env.DB_USERNAME || !process.env.PASSWORD) {
   // local development
   uri = 'mongodb://localhost/testdev';
-}
-else {
+} else {
   // hook up to actual database
 }
 
-let db = mongoose.connect(uri, {
+const db = mongoose.connect(uri, {
   useMongoClient: true,
 });
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
-  console.log("MongoDB connection successful to " + uri);
+  console.log(`MongoDB connection successful to ${uri}`);
 });
 
 // default index route
@@ -50,7 +48,7 @@ app.get('/', (req, res) => {
 });
 
 // register our routes
-exampleRoutes(app);
+app.use('/api', apiRouter);
 
 // START THE SERVER
 // =============================================================================
