@@ -64,6 +64,9 @@ export function getAllEvents(req, res, next) {
 }
 
 export function getApprovedEvents(req, res, next) {
+  // console.log('aaaaaaaaaa');
+  // console.log(req.query);
+  // console.log(req.params);
   // initialize table
   const table = {
 
@@ -71,7 +74,8 @@ export function getApprovedEvents(req, res, next) {
 
   // get starting date (it's a string that will be parsed later, mm/dd)
   const { date } = req.query;
-
+  console.log('ccccccccc');
+  console.log(date);
   // initialize a date object using the date
   const day = new Date(date); // date object
   const endDate = day.getDate() + 4;  // get end date
@@ -80,8 +84,8 @@ export function getApprovedEvents(req, res, next) {
   let idx = day.getDate();
   // fill up the table with empty arrays for each day from start to end
   while (idx < endDate) {
-    console.log(day);
-    const key = `${date.split('/')[0]}/${idx}`;
+    const fDate = idx.toString().length === 1 ? `0${idx}` : `${idx}`;
+    const key = `${date.split('/')[0]}/${fDate}`;
     table[key] = [];
     idx += 1;
   }
@@ -92,8 +96,11 @@ export function getApprovedEvents(req, res, next) {
     .then((result) => {
       // push each item into the table with the corresponding date
       result.forEach((item) => {
-        if (item.date in table) {
-          table[item.date].push(item);
+        console.log(item);
+        const split = item.date.split('-');
+        const convertedDate = `${split[1]}/${split[0]}`;
+        if (convertedDate in table) {
+          table[convertedDate].push(item);
         }
       });
 
