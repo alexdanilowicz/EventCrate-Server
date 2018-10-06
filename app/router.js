@@ -31,7 +31,7 @@ router.route('/events/')
 router.route('/review/')
   .get(EventController.getNonReviewedEvents);
 
-router.route('/approved/')
+router.route('/approved')
   .get(EventController.getApprovedEvents);
 
 router.route('/approve/:id')

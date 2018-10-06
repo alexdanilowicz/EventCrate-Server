@@ -26,7 +26,7 @@ export function createEvent(req, res, next) {
   // convert the time strings to nicer format
   const startTime = tConvert(start);
   const endTime = tConvert(end);
-
+  const finalDate = convertDate(date);
   const eventbody = {
     name,
     clubName,
@@ -34,6 +34,7 @@ export function createEvent(req, res, next) {
     location,
     startTime,
     endTime,
+    finalDate,
     date,
   };
 
@@ -63,9 +64,49 @@ export function getAllEvents(req, res, next) {
 }
 
 export function getApprovedEvents(req, res, next) {
+  // initialize table
+  const table = {
+
+  };
+
+  // get starting date (it's a string that will be parsed later, mm/dd)
+  const { date } = req.query;
+
+  // initialize a date object using the date
+  const day = new Date(date); // date object
+  const endDate = day.getDate() + 4;  // get end date
+
+  // create the next few days
+  let idx = day.getDate();
+  // fill up the table with empty arrays for each day from start to end
+  while (idx < endDate) {
+    console.log(day);
+    const key = `${date.split('/')[0]}/${idx}`;
+    table[key] = [];
+    idx += 1;
+  }
+
+  // current date comes from req.body
+  // table, key(date) -> array of bojects
   EventModel.find({ approved: '1' })
     .then((result) => {
-      res.send(result);
+      // push each item into the table with the corresponding date
+      result.forEach((item) => {
+        if (item.date in table) {
+          table[item.date].push(item);
+        }
+      });
+
+      // go through each array int able and sort them
+      // TODO: fix this
+      for (const key in table) {
+        table[key].sort((a, b) => {
+          const aStart = Number(a.startTime);
+          const bStart = Number(b.startTime);
+          return aStart <= bStart;
+        });
+      }
+      res.send(table);
     })
     .catch((err) => {
       res.send(err);
@@ -120,4 +161,9 @@ function tConvert(time) {
     time[0] = +time[0] % 12 || 12; // Adjust hours
   }
   return time.join(''); // return adjusted time or original string
+}
+
+function convertDate(dateString) {
+  const splitDate = dateString.split('-');
+  return new Date(splitDate[2], splitDate[1] - 1, splitDate[0]);
 }
