@@ -5,8 +5,6 @@ import bcrypt from 'bcryptjs';
 const AdminUserSchema = new Schema(
   {
     username: { type: String, unique: true, lowercase: true },
-    contactEmail: { type: String, unique: true, lowercase: true },
-    description: { type: String },
     email: { type: String, unique: true, lowercase: true },
     password: { type: String, select: false },
   },

@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 const ClubUserSchema = new Schema(
   {
     username: { type: String, unique: true, lowercase: true },
+    description: { type: String },
+    displayName: { type: String },
     email: { type: String, unique: true, lowercase: true },
     password: { type: String, select: false },
   },
