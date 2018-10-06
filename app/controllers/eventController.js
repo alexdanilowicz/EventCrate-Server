@@ -1,5 +1,3 @@
-import { fromCallback } from 'promise-cb';
-
 import EventModel from '../models/eventModel';
 
 /**
@@ -64,12 +62,58 @@ export function getAllEvents(req, res, next) {
     });
 }
 
+export function getApprovedEvents(req, res, next) {
+  EventModel.find({ approved: '1' })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+}
+
+export function getNonReviewedEvents(req, res, next) {
+  EventModel.find({ approved: '0' })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+}
+
+/**
+ * flag event as approved (1) or declined (2)
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export function approveEvent(req, res, next) {
+  const id = req.params.id;
+  EventModel.findOneAndUpdate({ _id: id }, { approved: '1' })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+}
+
+export function declineEvent(req, res, next) {
+  const id = req.params.id;
+  EventModel.findOneAndUpdate({ _id: id }, { approved: '2' })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+}
+
 // helper function from stack overflow: convert string in format
 // "HH:MM:SS" in 24 hour time to 12 hour time
 function tConvert(time) {
-  // Check correct time format and split into components
   time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-
   if (time.length > 1) { // If time format correct
     time = time.slice(1);  // Remove full string match value
     time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM

@@ -10,6 +10,7 @@ const EventModelSchema = new Schema(
     startTime: { type: String },
     endTime: { type: String },
     date: { type: String },
+    approved: { type: String, default: '0' }, // (0: not reviewed, 1: approved, 2: declined)
   },
   {
     toJSON: {

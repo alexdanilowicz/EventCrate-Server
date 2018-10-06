@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import eventModel from './eventModel';
 
 // create a Event Schema with a title field
 const QueueModelSchema = new Schema(
@@ -16,7 +15,4 @@ const QueueModelSchema = new Schema(
   // create model class
 const QueueModel = mongoose.model('QueueModel', QueueModelSchema);
 
-
 export default QueueModel;
-
-// friends: [{ type : ObjectId, ref: 'User' }],

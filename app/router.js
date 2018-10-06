@@ -28,4 +28,16 @@ router.route('/events/')
   .post(EventController.createEvent)
   .get(EventController.getAllEvents);
 
+router.route('/review/')
+  .get(EventController.getNonReviewedEvents);
+
+router.route('/approved/')
+  .get(EventController.getApprovedEvents);
+
+router.route('/approve/:id')
+  .put(EventController.approveEvent);
+
+router.route('/decline/:id')
+  .put(EventController.declineEvent);
+
 export default router;
